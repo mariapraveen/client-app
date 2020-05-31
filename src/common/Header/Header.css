@@ -1,0 +1,28 @@
+.m-header-container {
+    height: 50px;
+    background: orange;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 20px;
+}
+
+.m-header-container .m-header-left-container {
+    display: flex;
+}
+
+.m-header-container .m-header-left-container .m-header-name{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+
+.m-header-container .m-header-right-container {
+    display: flex;
+}
+
+.m-header-container .m-header-right-container .m-user-icon {
+    font-size: 25px;
+    display: inline-flex;
+    margin-right: 10px;
+}
