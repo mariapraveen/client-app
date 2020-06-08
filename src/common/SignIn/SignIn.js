@@ -1,5 +1,8 @@
 import React from 'react';
+import { APIURL } from './../Globals';
+
 import './SignIn.css';
+
 
 class SignIn extends React.Component {
     usernameRef;
@@ -24,18 +27,18 @@ class SignIn extends React.Component {
                     </div>
                     <div className="modal-body">
                         <div className="form-group row">
-                            <label htmlFor="username" className="col-sm-2 col-form-label">User</label>
+                            <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
                             <div className="col-sm-10">
-                                <input type="text" ref={this.usernameRef} className="form-control" id="username" />
+                                <input type="text" ref={this.usernameRef} required className="form-control" id="username" />
                             </div>
                         </div>
                         <div className="form-group row">
                             <label htmlFor="pwd" className="col-sm-2 col-form-label">Password</label>
                             <div className="col-sm-10">
-                                <input type="password" ref={this.pwdRef} className="form-control" id="pwd" />
+                                <input type="password" ref={this.pwdRef} required className="form-control" id="pwd" />
                             </div>
                         </div>
-                        <div ref={this.statusRef}  className="m-signin-msg"></div>
+                        <div ref={this.statusRef} className="m-signin-msg"></div>
                     </div>
                     <div className="modal-footer">
                         <button type="button" onClick={this.onSignIn.bind(this)} className="btn btn-primary">Sign In</button>
@@ -50,10 +53,15 @@ class SignIn extends React.Component {
         let pwd = this.pwdRef.current.value;
         let data = { username: userName, pwd: pwd };
         let httpRequest = new XMLHttpRequest();
-        httpRequest.open('POST', 'http://ec2-52-66-132-178.ap-south-1.compute.amazonaws.com:9000/signin', false);
+        httpRequest.open('POST', `${APIURL}/signin`, false);
         httpRequest.setRequestHeader('Content-Type', 'plain/text');
         httpRequest.send(JSON.stringify(data));
-        this.statusRef.current.innerText = httpRequest.responseText;
+        let response = JSON.parse(httpRequest.responseText);
+        if (response.status == 'success') {
+            window.location.pathname = `/${response.msg.username}`;
+        } else {
+            this.statusRef.current.innerText = response.msg;
+        }
     }
 }
 
