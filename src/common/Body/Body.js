@@ -2,7 +2,7 @@ import React from 'react';
 import User from './../User/User';
 import NotFound from './../NotFound/NotFound';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch,
     Route
 } from "react-router-dom";

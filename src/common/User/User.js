@@ -7,21 +7,31 @@ import IndividualUser from './IndividualUser/IndividualUser';
 class User extends React.Component {
     constructor() {
         super();
+        this.onHashChanged = this.onHashChanged.bind(this);
         let hashDetails = this.getHashDetails();
         this.state = {
             isUser: hashDetails.isUser,
             name: hashDetails.name
         };
+        window.addEventListener('hashchange', this.onHashChanged);
+
     }
 
     getHashDetails() {
-        let pathArray = window.location.pathname.split('/');
+        let hashArray = window.location.hash.split('/');
         return {
-            isUser: pathArray[1] ? true : false,
-            name: pathArray[1]
+            isUser: hashArray[1] ? true : false,
+            name: hashArray[1]
         }
     }
 
+    onHashChanged() {
+        let hashDetails = this.getHashDetails();
+        this.setState({
+            isUser: hashDetails.isUser,
+            name: hashDetails.name
+        });
+    }
     getUserComponent() {
         if (!this.state.isUser) {
             return (<AllUser />);
@@ -33,6 +43,10 @@ class User extends React.Component {
         return (<div>
             {this.getUserComponent()}
         </div>)
+    }
+    
+    componentWillUnmount(){
+        window.removeEventListener('hashchange', this.onHashChanged);
     }
 }
 

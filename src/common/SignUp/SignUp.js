@@ -1,6 +1,6 @@
 import React from 'react';
 import { APIURL } from './../Globals';
-
+import $ from 'jquery';
 import './SignUp.css';
 
 class SignUp extends React.Component {
@@ -64,8 +64,9 @@ class SignUp extends React.Component {
         httpRequest.setRequestHeader('Content-Type', 'plain/text');
         httpRequest.send(JSON.stringify(data));
         let response = JSON.parse(httpRequest.responseText);
-        if (response.status == 'success') {
-            window.location.pathname = `/${response.msg.username}`;
+        if (response.status === 'success') {
+            $('.m-signup-modal').modal('hide');
+            window.location.hash = `${response.msg.username}`;
         } else {
             this.statusRef.current.innerText = response.msg;
         }

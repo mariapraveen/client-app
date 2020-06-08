@@ -32,14 +32,10 @@ class Header extends React.Component {
     }
 
     onSignUp(e) {
-        $('.m-signup-modal').modal({
-            show: true
-        });
+        $('.m-signup-modal').modal('show');
     }
     onSignIn(e) {
-        $('.m-signin-modal').modal({
-            show: true
-        });
+        $('.m-signin-modal').modal('show');
     }
 }
 
