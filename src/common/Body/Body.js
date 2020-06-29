@@ -1,5 +1,5 @@
 import React from 'react';
-import User from './../User/User';
+import Profile from './../Profile/Profile';
 import NotFound from './../NotFound/NotFound';
 import {
     HashRouter as Router,
@@ -14,10 +14,10 @@ class Body extends React.Component {
             <Router>
                 <Switch>
                     <Route exact path="/">
-                        <User />
+                        <Profile />
                     </Route>
                     <Route exact path="/:name">
-                        <User />
+                        <Profile />
                     </Route>
                     <Route path="*">
                         <NotFound />

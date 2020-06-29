@@ -1,11 +1,24 @@
 import React from 'react';
-import $ from 'jquery';
 import './Header.css';
 
 import SignIn from '../SignIn/SignIn';
 import SignUp from '../SignUp/SignUp';
 
+import { userLoggedDetails } from './../Globals';
+import { Dropdown } from 'react-bootstrap';
+
 class Header extends React.Component {
+    signinRef;
+    signupRef;
+    constructor() {
+        super();
+        this.state = { refresh: true, name: undefined };
+        this.signinRef = React.createRef();
+        this.signupRef = React.createRef();
+    }
+    refresh(name = undefined) {
+        this.setState({ refresh: true, name: name });
+    }
     render() {
         return (
             <div className="m-header-container">
@@ -13,29 +26,45 @@ class Header extends React.Component {
                     <div className="m-header-name">ARTLY</div>
                 </div>
                 <div className="m-header-right-container">
-                    <div className="m-profile-dropdown">
-                        <button className="btn btn-secondary dropdown-toggle" type="button" id="m-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div className="m-profile-salutation">Howdy {this.state.name ? this.state.name : 'Guest'} !!</div>
+                    <Dropdown id="m-dropdownMenu" className="m-profile-dropdown" >
+                        <Dropdown.Toggle id="dropdown-basic" className="m-ddn">
                             <div className="m-user-icon">
                                 <i className="fas fa-user-circle"></i>
                             </div>
-                        </button>
-                        <div className="dropdown-menu dropdown-menu-lg-left" aria-labelledby="m-dropdownMenu">
-                            <button className="dropdown-item" onClick={this.onSignIn.bind(this)} type="button">Sign in</button>
-                            <button className="dropdown-item" onClick={this.onSignUp.bind(this)} type="button">Sign up</button>
-                        </div>
-                    </div>
+                        </Dropdown.Toggle>
+                        {userLoggedDetails.loggedIn ? (
+                            <Dropdown.Menu>
+                                <Dropdown.Item>{userLoggedDetails.username}</Dropdown.Item>
+                                <Dropdown.Item onClick={this.onSignOut.bind(this)}>Sign Out</Dropdown.Item>
+                            </Dropdown.Menu>
+
+                        ) : (<Dropdown.Menu>
+                            <Dropdown.Item onClick={this.onSignIn.bind(this)}>Sign In</Dropdown.Item>
+                            <Dropdown.Item onClick={this.onSignUp.bind(this)}>Sign Up</Dropdown.Item>
+                        </Dropdown.Menu>
+
+                            )}
+                    </Dropdown>
                 </div>
-                <SignIn />
-                <SignUp />
+                <SignIn refresh={this.refresh.bind(this)} ref={this.signinRef} />
+                <SignUp refresh={this.refresh.bind(this)} ref={this.signupRef} />
             </div>
         );
     }
 
     onSignUp(e) {
-        $('.m-signup-modal').modal('show');
+        this.signupRef.current.toggleDialog(true);
+    }
+
+    onSignOut(e) {
+        userLoggedDetails.loggedIn = false;
+        userLoggedDetails.username = undefined;
+        window.location.hash = ``;
+        this.refresh();
     }
     onSignIn(e) {
-        $('.m-signin-modal').modal('show');
+        this.signinRef.current.toggleDialog(true);
     }
 }
 

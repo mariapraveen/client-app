@@ -1,6 +1,6 @@
 .m-header-container {
     height: 50px;
-    background: orange;
+    background: #cccccc;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -12,17 +12,32 @@
 }
 
 .m-header-container .m-header-left-container .m-header-name{
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 25px;
+    font-family: cursive;
+    font-weight: 800;
 }
 
 
 .m-header-container .m-header-right-container {
     display: flex;
+    align-items: center;
+}
+
+.m-header-container .m-header-right-container .m-profile-salutation {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: Roboto;
+    margin-right: 15px;
+}
+
+.m-header-container .m-header-right-container .m-profile-dropdown .m-ddn,
+.m-header-container .m-header-right-container .m-profile-dropdown .m-ddn:focus{
+    background: transparent;
+    border: 0;
+    box-shadow: none;
 }
 
 .m-header-container .m-header-right-container .m-user-icon {
     font-size: 25px;
     display: inline-flex;
-    margin-right: 10px;
 }
