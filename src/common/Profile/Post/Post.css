@@ -18,6 +18,11 @@
     margin-left: 15px;
 }
 
+.m-post-container .m-post-info-container .m-post-info-profile a{
+    text-decoration: none;
+    color: #000000;
+}
+
 .m-post-container .m-post-info-container .m-post-info-profile i{
     font-size: 30px;
 }
@@ -66,3 +71,9 @@
     }
     
   }
+
+  /* dark theme */
+
+  .m-dark-theme .m-post-container .m-post-info-container .m-post-info-profile a{
+    color: #ffffff;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import './AddPost.css';
 import { userLoggedDetails } from '../../../Globals';
 import { sendRequest } from '../../../Helpers/Helper';
-import { Button, Form, Row, Col, Modal } from 'react-bootstrap';
+import { Button, Form, Row, Col, Modal, Spinner } from 'react-bootstrap';
 
 class AddPost extends React.Component {
     captionRef;
@@ -18,7 +18,7 @@ class AddPost extends React.Component {
         this.addPostRef = React.createRef();
         this.dataUrl = '';
         this.state = {
-            disabeld: true,
+            disabled: true,
             showDialog: false
         };
     }
@@ -46,7 +46,15 @@ class AddPost extends React.Component {
                 <img className="m-img" ref={this.imgRef} />
             </Modal.Body>
             <Modal.Footer>
-                <Button disabled={this.state.disabeld} ref={this.addPostRef} onClick={this.addPost.bind(this)} bsstyle="primary">Post</Button>
+                <Button disabled={this.state.disabled} ref={this.addPostRef} onClick={this.addPost.bind(this)} bsstyle="primary">
+                    <Spinner
+                        className="spinner"
+                        as="span"
+                        animation="border"
+                        size="sm"
+                    />
+                    Post
+                </Button>
             </Modal.Footer>
         </Modal>)
     }
@@ -61,15 +69,15 @@ class AddPost extends React.Component {
     }
 
     addPost(e) {
+        this.toggleSpinner(true);
         let data = { username: userLoggedDetails.username, caption: this.captionRef.current.value, img: this.dataUrl };
-        this.toggleDialog();
-        sendRequest('POST', 'addpost', data);
-        this.props.refresh();
+        sendRequest('POST', 'addpost', data, this.responseCb.bind(this));
     }
 
     addImage() {
         this.addImageRef.current.click();
     }
+
     onUpload(e) {
         this.dataUrl = '';
         this.togglePreview(false);
@@ -78,19 +86,23 @@ class AddPost extends React.Component {
         reader.readAsArrayBuffer(e.target.files[0]);
         reader.addEventListener("load", this.onReaderLoad.bind(this));
     }
+
     onReaderLoad(e) {
         this.imgRef.current.src = window.URL.createObjectURL(new Blob([e.target.result]));
         this.imgRef.current.addEventListener("load", this.onImageLoad.bind(this));
     }
+
     onImageLoad(e) {
         this.dataUrl = this.compressImg();
         this.togglePreview(true);
         this.validate();
     }
+
     validate() {
         let caption = this.captionRef.current.value;
-        this.setState({ disabeld: !(caption && this.dataUrl) })
+        this.setState({ disabled: !(caption && this.dataUrl) })
     }
+
     compressImg() {
         let canvas = document.createElement('canvas');
         let width = this.imgRef.current.width;
@@ -99,7 +111,7 @@ class AddPost extends React.Component {
         canvas.height = height;
         var ctx = canvas.getContext("2d");
         ctx.drawImage(this.imgRef.current, 0, 0, width, height);
-        return canvas.toDataURL("image/jpeg", .6);
+        return canvas.toDataURL("image/jpeg", .7);
     }
 
     togglePreview(isPreview) {
@@ -108,6 +120,20 @@ class AddPost extends React.Component {
         } else {
             this.imgRef.current.classList.remove('m-img-preview');
         }
+    }
+
+    toggleSpinner(show = false) {
+        if (show) {
+            this.addPostRef.current.classList.add('m-post-spinner')
+        } else {
+            this.addPostRef.current.classList.remove('m-post-spinner');
+        }
+    }
+    
+    responseCb(response) {
+        this.toggleSpinner();
+        this.toggleDialog();
+        this.props.refreshPost();
     }
 }
 

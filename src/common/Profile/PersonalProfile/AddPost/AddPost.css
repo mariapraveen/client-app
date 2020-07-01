@@ -18,3 +18,16 @@
     height: 150px;
     margin: auto;
 }
+
+.m-post-modal .spinner{
+    display: none;
+}
+
+.m-post-modal .m-post-spinner {
+    pointer-events: none;
+}
+
+.m-post-modal .m-post-spinner .spinner{
+    display: inline-block;
+    margin-right: 10px;
+}

@@ -11,7 +11,7 @@ class Profile extends React.Component {
     render() {
         return (<div className="m-personal-profile-container">
             <button type="button" onClick={this.addPost.bind(this)} className="btn btn-primary m-add-post-btn">Add Post</button>
-            <AddPost refresh={this.props.refresh.bind(this)} ref={this.addPostRef} />
+            <AddPost refreshPost={this.props.refreshPost.bind(this)} ref={this.addPostRef} />
         </div>)
     }
 

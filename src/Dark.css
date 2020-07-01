@@ -1,0 +1,26 @@
+.m-dark-theme {
+    background: #000000;
+    color: #ffffff;
+  }
+  
+.m-dark-theme .dropdown-menu
+{
+    background: #25282b;
+    color: #ffffff;
+}
+  .m-dark-theme .dropdown-item {
+    color: #ffffff;
+}
+.m-dark-theme .dropdown-item:hover ,
+.m-dark-theme .dropdown-item:focus {
+    background: #3f4144;
+    color: #ffffff;
+}
+
+.m-dark-theme .modal-header .close span{
+    color: #ffffff;
+}
+  
+.m-dark-theme .modal-content {
+    background: #000000;
+}

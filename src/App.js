@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './App.css';
+import './Dark.css';
 
 import Header from './common/Header/Header';
 import Body from './common/Body/Body';

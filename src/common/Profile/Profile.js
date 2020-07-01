@@ -13,80 +13,84 @@ class Profile extends React.Component {
     constructor() {
         super();
         this.onHashChanged = this.onHashChanged.bind(this);
-        let hashDetails = this.getHashDetails();
         this.state = {
-            isUser: hashDetails.isUser,
-            name: hashDetails.name,
-            is404: hashDetails.is404,
-            isOwnProfile: hashDetails.isOwnProfile,
-            refresh: true
+            isUser: false,
+            name: '',
+            is404: false,
+            isOwnProfile: false,
+            posts: []
         };
         window.addEventListener('hashchange', this.onHashChanged);
     }
 
-    refresh() {
-        this.setState({ refresh: true});
+    componentDidMount() {
+        this.setHashDetails();
     }
-
-    getHashDetails() {
+    setHashDetails() {
         let hashArray = window.location.hash.split('/');
-        let isUser = hashArray[1] ? true : false;
-        let userName = hashArray[1];
-        let is404 = false;
-        if (isUser) {
-            if (userLoggedDetails.username === userName) {
+        this.state.isUser = hashArray[1] ? true : false;
+        this.state.userName = hashArray[1] ? hashArray[1] : '';
+        if (this.state.isUser) {
+            if (userLoggedDetails.username === this.state.userName) {
                 userLoggedDetails.isOwnProfile = true;
+                this.getPost();
             } else {
-                let data = { username: userName };
-                let response = sendRequest('POST', 'exists', data);
-                if (response.status === 'success') {
-
-                } else {
-                    is404 = true
-                }
+                let data = { username: this.state.userName };
+                sendRequest('POST', 'exists', data, this.responseExistCb.bind(this));
                 userLoggedDetails.isOwnProfile = false;
             }
+        } else {
+            this.getPost();
         }
 
-        return {
-            isUser: isUser,
-            name: userName,
-            is404: is404,
-            isOwnProfile: userLoggedDetails.isOwnProfile
-        }
+        this.setState({
+            isUser: this.state.isUser,
+            isOwnProfile: userLoggedDetails.isOwnProfile,
+            name: this.state.userName
+        });
     }
 
     onHashChanged() {
-        let hashDetails = this.getHashDetails();
-        this.setState({
-            isUser: hashDetails.isUser,
-            name: hashDetails.name,
-            is404: hashDetails.is404,
-            isOwnProfile: hashDetails.isOwnProfile
-        });
+        this.setHashDetails();
     }
+
     getProfile() {
         if (this.state.is404) {
             return (<NotFound />);
         } else if (this.state.isUser && this.state.isOwnProfile) {
-            return (<PersonalProfile name={this.state.name} refresh={this.refresh.bind(this)} />)
+            return (<PersonalProfile name={this.state.name} refreshPost={this.refreshPost.bind(this)} />)
         } else {
             return (<CommonProfile name={this.state.name} isUser={this.state.isUser} />);
         }
     }
-    
+
     render() {
-        this.posts = this.getPost();
         return (<div>
             {this.getProfile()}
-            <Post posts={this.posts} />
+            <Post posts={this.state.posts} />
         </div>)
     }
 
+    refreshPost() {
+        this.getPost();
+    }
+
     getPost() {
-        let data = { username: this.state.name, start: 0, count: 10 };
+        let data = { username: this.state.name, start: 0, count: 5 };
         let method = this.state.isUser ? 'getuserpost' : 'getpost';
-        return sendRequest('POST', method, data).msg;
+        sendRequest('POST', method, data, this.responsePostCb.bind(this));
+    }
+
+    responsePostCb(response) {
+        this.setState({ posts: response.msg });
+    }
+
+    responseExistCb(response) {
+        if (response.status === 'success') {
+            this.getPost();
+        } else {
+            this.setState({ is404: true });
+        }
     }
 
     componentWillUnmount() {

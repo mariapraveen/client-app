@@ -6,3 +6,16 @@
     color: red;
     font-weight: 400;
 }
+
+.m-signup-modal .spinner{
+    display: none;
+}
+
+.m-signup-modal .m-signup-spinner {
+    pointer-events: none;
+}
+
+.m-signup-modal .m-signup-spinner .spinner{
+    display: inline-block;
+    margin-right: 10px;
+}

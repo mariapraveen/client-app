@@ -1,14 +1,18 @@
 import { APIURL } from './../Globals';
 
-export function sendRequest(type, name, data, pwd = undefined) {
+export function sendRequest(type, name, data, cb, pwd = undefined) {
     let httpRequest = new XMLHttpRequest();
-    httpRequest.open(type, `${APIURL}/${name}`, false);
+    httpRequest.open(type, `${APIURL}/${name}`, true);
     httpRequest.setRequestHeader('Content-Type', 'plain/text');
     if (pwd) {
         httpRequest.setRequestHeader("Authorization", "Basic " + btoa(pwd));
     }
+    httpRequest.addEventListener('readystatechange', () => {
+        if (httpRequest.readyState === 4) {
+            cb(JSON.parse(httpRequest.responseText));
+        }
+    })
     httpRequest.send(JSON.stringify(data));
-    return JSON.parse(httpRequest.responseText);
 }
 
 export function getDateInfo(time) {
